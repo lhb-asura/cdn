@@ -2,6 +2,7 @@
 #include "lib/lib_io.h"
 #include<string.h>
 #include<iostream>
+#include <time.h>
 using namespace std;
 
 struct Edge
@@ -26,8 +27,8 @@ Cost_Edge need[MAX_EDGE_NUM];        //需要的带宽
 int edge_of_net[MAX_EDGE_NUM];  //每个网络节点的边数
 int list[MAX_EDGE_NUM]; //基因评估对照表
 
-int *old_normal＿body[MAX_EDGE_NUM];
-int *new_normal＿body[MAX_EDGE_NUM];           //服务节点染色体编码，每一行代表一条染色体
+int old_normal_body[MAX_EDGE_NUM];
+int new_normal_body[MAX_EDGE_NUM];           //服务节点染色体编码
 int gene_num[MAX_EDGE_NUM];               //每条染色体的基因数量
 
 int normal_body_num; //正常个体数
@@ -35,7 +36,7 @@ int god_num=0; //神一样的个体数量（单基因，永生不死）
 int god_code[MAX_EDGE_NUM];//神基因
 
 
-//评估函数(评估每条染色体的优劣)
+//评估函数
 int evaluate(int *normal_body,int len)
 {
     int grade = 0;
@@ -50,7 +51,7 @@ void evolusion()
 {
 
 }
-//自然选择
+//自然选择(最小费用流)
 void select()
 {
 
@@ -72,7 +73,7 @@ void kill_illigal(int *normal_body,int len)
 
 void initGroup()
 {
-    int normal_num=consume_num-god_num-1;
+    int normal_num=rand()%(consume_num-god_num-1);
 
 }
 
@@ -95,14 +96,15 @@ void deploy_server(char * topo[MAX_EDGE_NUM], int line_num,char * filename) {
 }
 
 int main() {
+    srand( (unsigned)time( NULL ) );
     char *topo[MAX_EDGE_NUM];
     char *topo_file="/home/cust/Desktop/case3.txt";
   //  cout << "enter input file" << endl;
   //  cin >> topo_file;
    // cout << "eter result file" << endl;
   //  cin >> result_file;
-    int line_num = read_file(topo, MAX_EDGE_NUM, topo_file);
-    deploy_server(topo, line_num, "/home/cust/Desktop/resut.txt");
+  //  int line_num = read_file(topo, MAX_EDGE_NUM, topo_file);
+   // deploy_server(topo, line_num, "/home/cust/Desktop/resut.txt");
     return 0;
 }
 
