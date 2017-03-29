@@ -24,34 +24,29 @@ int one_sever_cost;//一台视频内容服务器部署成本
 Edge *net_matrix[MAX_EDGE_NUM];  //邻接矩阵
 Cost_Edge need[MAX_EDGE_NUM];        //需要的带宽
 
-int edge_of_net[MAX_EDGE_NUM];  //每个网络节点的边数
-int list[MAX_EDGE_NUM]; //基因评估对照表
+int gen_list[MAX_EDGE_NUM]; //基因评估对照表
+int body_list[MAX_EDGE_NUM];//染色体评估对照表
 
-int old_normal_body[MAX_EDGE_NUM];
-int new_normal_body[MAX_EDGE_NUM];           //服务节点染色体编码
-int gene_num[MAX_EDGE_NUM];               //每条染色体的基因数量
-
-int normal_body_num; //正常个体数
-int god_num=0; //神一样的个体数量（单基因，永生不死）
+int god_num=0; //神基因数量（单基因，一直遗传）
 int god_code[MAX_EDGE_NUM];//神基因
 
-
-//评估函数
-int evaluate(int *normal_body,int len)
+int *body[MAX_EDGE_NUM];
+int body_num;
+void spfa()
 {
-    int grade = 0;
-    for(int i=0;i<len;i++) {
-        int net_id = normal_body[i];
-        grade += list[net_id];
-    }
-    return  grade;
+
+}
+//评估函数（最小费用流）
+int evaluate(int *a_body)
+{
+
 }
 //进化
 void evolusion()
 {
 
 }
-//自然选择(最小费用流)
+//自然选择
 void select()
 {
 
@@ -61,20 +56,67 @@ void on_cross()
 {
 
 }
-
-//杀死不合法的个体（１.路径不存在）
-void kill_illigal(int *normal_body,int len)
+//
+int cost()
 {
-    for(int i=0;i<len;i++)
-    {
 
-    }
 }
-
+bool is_content(int id,int index,int*sever)
+{
+    for(int i=0;i<god_num;i++)
+    {
+        if(id==god_code[i])
+        {
+            return true;
+        }
+    }
+    for(int i=0;i<index;i++)
+    {
+        if(id==sever[i])
+        {
+            return true;
+        }
+    }
+    return false;
+}
 void initGroup()
 {
-    int normal_num=rand()%(consume_num-god_num-1);
-
+    int body_num=vex_num;
+    for(int i=0;i<body_num;i++)
+    {
+        for(int j=0;j<vex_num;j++)
+        {
+            body[i][j]=0;
+        }
+    }
+    //将神基因赋值为１
+    for(int i=0;i<god_num;i++)
+    {
+        for(int j=0;j<body_num;j++)
+        {
+            body[j][god_code[i]]=1;
+        }
+    }
+    for(int i=0;i<body_num;i++)
+    {
+        int auto_sever_num=rand()%(consume_num-god_num);
+        int *sever=new int[auto_sever_num];
+        int point=rand()%vex_num;//服务器点
+        int index=0;
+        while(index<auto_sever_num)
+        {
+            if(is_content(point,index,sever))
+            {
+                point=rand()%vex_num;
+            }
+            else
+            {
+                body[i][point]=1;
+                sever[index]=point;
+                index++;
+            }
+        }
+    }
 }
 
 //你要完成的功能总入口
@@ -147,7 +189,7 @@ void init(char * topo[MAX_EDGE_NUM], int line_num)
             }
 
         }
-        list[i]=grade*(k/edge_num);
+        gen_list[i]=grade*(k/edge_num);
     }
     for(int i=edge_num+5;i<consume_num+edge_num+5;i++)
     {
@@ -172,5 +214,4 @@ void init(char * topo[MAX_EDGE_NUM], int line_num)
             god_num++;
         }
     }
-
 }

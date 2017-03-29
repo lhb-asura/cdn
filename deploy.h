@@ -9,7 +9,8 @@ void initGroup();
 void evolusion();
 void select();
 void on_cross();
-
+bool is_content(int id,int index,int*sever);
+void spfa();
 	
 
 #endif
